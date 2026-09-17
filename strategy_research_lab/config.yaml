@@ -1,0 +1,201 @@
+data_source:
+  sqlite_path: ../test2/data/futures_research_cache.sqlite
+  interval: 15m
+  min_rows_per_symbol: 300
+  start_date: null
+  end_date: null
+  symbols: []
+  max_symbols: null
+
+money_model:
+  starting_capital_usd: 100000
+  stake_per_trade_usd: 100
+  leverage: 1.0
+  fee_pct_per_side: 0.0
+  slippage_pct_per_side: 0.0
+
+execution:
+  one_open_trade_per_symbol: true
+  ambiguous_candle_policy: pessimistic
+
+filters:
+  min_liquidity_24h: 0.0
+  allowed_rsi_buckets: []
+  allowed_atr_buckets: []
+  allowed_volume_buckets: []
+  allowed_liquidity_buckets: []
+  allowed_score_buckets: []
+
+scenarios:
+  - name: Fixed SL 2% / TP 5%
+    mode: fixed_pct
+    stop_pct: 2.0
+    take_pct: 5.0
+  - name: Fixed SL 2% / TP 10%
+    mode: fixed_pct
+    stop_pct: 2.0
+    take_pct: 10.0
+  - name: Fixed SL 5% / TP 5%
+    mode: fixed_pct
+    stop_pct: 5.0
+    take_pct: 5.0
+  - name: Fixed SL 5% / TP 10%
+    mode: fixed_pct
+    stop_pct: 5.0
+    take_pct: 10.0
+  - name: ATR1 / 1.5R
+    mode: atr_r
+    stop_atr_multiple: 1.0
+    take_r_multiple: 1.5
+  - name: ATR1 / 2R
+    mode: atr_r
+    stop_atr_multiple: 1.0
+    take_r_multiple: 2.0
+  - name: ATR1.5 / 2R
+    mode: atr_r
+    stop_atr_multiple: 1.5
+    take_r_multiple: 2.0
+  - name: ATR2 / 3R
+    mode: atr_r
+    stop_atr_multiple: 2.0
+    take_r_multiple: 3.0
+  - name: Structural / 2R
+    mode: structural_rr
+    atr_buffer: 0.5
+    take_r_multiple: 2.0
+  - name: Structural Measured Move
+    mode: measured_move
+    atr_buffer: 0.5
+    fallback_take_r_multiple: 2.0
+
+dashboard:
+  title: Strategy Research Lab
+  page_icon: SR
+  show_all_strategies_by_default: true
+  default_strategy_selection:
+    - double_top_short
+    - double_bottom_long
+  default_symbol_limit_for_heatmap: 30
+  trade_chart_padding_bars: 24
+  trade_viewer_recent_limit: 500
+  max_plot_points: 15000
+  trades_table_default_rows: 1000
+  trades_table_max_rows: 5000
+  auto_open_port: 8502
+
+export:
+  export_encoding: utf-8-sig
+  write_signals_csv: true
+  write_trades_csv: true
+  write_summary_markdown: true
+
+strategies:
+  double_top_short:
+    enabled: true
+    enabled_scenarios:
+      - Fixed SL 2% / TP 5%
+      - Fixed SL 2% / TP 10%
+      - Fixed SL 5% / TP 5%
+      - Fixed SL 5% / TP 10%
+      - ATR1 / 1.5R
+      - ATR1 / 2R
+      - Structural / 2R
+      - Structural Measured Move
+    pivot_lookback_left: 3
+    pivot_lookback_right: 3
+    max_peak_diff_pct: 1.0
+    max_peak_diff_atr_multiple: 0.5
+    min_bars_between_peaks: 6
+    max_bars_between_peaks: 60
+    min_valley_depth_pct: 1.5
+    max_breakout_bars_after_second_peak: 20
+    use_ema_filter: false
+    use_volume_ratio_filter: false
+    min_volume_ratio: 1.2
+    use_rsi_weakness_filter: false
+    min_rsi_second_peak: 55.0
+    require_rsi_divergence: false
+    min_liquidity_24h: 0.0
+    min_atr_pct: 0.0
+
+  double_bottom_long:
+    enabled: true
+    enabled_scenarios:
+      - Fixed SL 2% / TP 5%
+      - Fixed SL 2% / TP 10%
+      - Fixed SL 5% / TP 5%
+      - Fixed SL 5% / TP 10%
+      - ATR1 / 1.5R
+      - ATR1 / 2R
+      - Structural / 2R
+      - Structural Measured Move
+    pivot_lookback_left: 3
+    pivot_lookback_right: 3
+    max_bottom_diff_pct: 1.0
+    max_bottom_diff_atr_multiple: 0.5
+    min_bars_between_bottoms: 6
+    max_bars_between_bottoms: 60
+    min_bounce_height_pct: 1.5
+    max_breakout_bars_after_second_bottom: 20
+    use_ema_filter: false
+    use_volume_ratio_filter: false
+    min_volume_ratio: 1.2
+    use_rsi_strength_filter: false
+    max_rsi_second_bottom: 45.0
+    require_rsi_bullish_divergence: false
+    min_liquidity_24h: 0.0
+    min_atr_pct: 0.0
+
+  breakdown_short:
+    enabled: true
+    enabled_scenarios:
+      - Fixed SL 2% / TP 5%
+      - Fixed SL 2% / TP 10%
+      - ATR1 / 1.5R
+      - ATR1 / 2R
+      - ATR1.5 / 2R
+      - ATR2 / 3R
+      - Structural / 2R
+    breakdown_lookback_bars: 24
+    body_pct_min: 0.7
+    volume_ratio_min: 1.3
+    atr_pct_min: 0.6
+    max_close_distance_from_low_pct_of_range: 0.35
+    min_liquidity_24h: 0.0
+    require_ema_trend: true
+
+  oversold_reversal_long:
+    enabled: true
+    enabled_scenarios:
+      - Fixed SL 2% / TP 5%
+      - Fixed SL 5% / TP 5%
+      - ATR1 / 1.5R
+      - ATR1 / 2R
+      - Structural / 2R
+    rsi_threshold: 30.0
+    lower_wick_pct_min: 0.8
+    body_pct_min: 0.2
+    volume_ratio_min: 1.0
+    min_liquidity_24h: 0.0
+    min_atr_pct: 0.4
+    require_bullish_close: true
+    entry_mode: signal_close
+
+  trend_pullback_long:
+    enabled: true
+    enabled_scenarios:
+      - Fixed SL 2% / TP 5%
+      - Fixed SL 5% / TP 10%
+      - ATR1 / 1.5R
+      - ATR1 / 2R
+      - ATR1.5 / 2R
+      - Structural / 2R
+    pullback_lookback_bars: 12
+    body_pct_min: 0.35
+    volume_ratio_min: 1.0
+    min_liquidity_24h: 0.0
+    min_atr_pct: 0.4
+    rsi_min: 40.0
+    rsi_max: 65.0
+    zone_tolerance_pct: 0.35
+    require_close_back_above_ema20: true

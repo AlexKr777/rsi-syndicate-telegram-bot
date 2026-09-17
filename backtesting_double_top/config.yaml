@@ -1,0 +1,63 @@
+data_source:
+  sqlite_path: ../test2/data/futures_research_cache.sqlite
+  interval: 15m
+  min_rows_per_symbol: 300
+  start_date: null
+  end_date: null
+  symbols: []
+  max_symbols: null
+
+pattern_detection:
+  pivot_lookback_left: 3
+  pivot_lookback_right: 3
+  max_peak_diff_pct: 1.0
+  max_peak_diff_atr_multiple: 0.5
+  min_bars_between_peaks: 6
+  max_bars_between_peaks: 60
+  min_valley_depth_pct: 1.5
+  max_breakout_bars_after_second_peak: 20
+  breakout_confirmation_mode: breakout_close
+
+filters:
+  use_volume_filter: false
+  min_volume_ratio: 1.2
+  use_rsi_filter: false
+  min_rsi_for_short: 65.0
+  use_ema_filter: false
+  require_close_below_ema20: true
+  require_ema20_above_ema50: false
+  atr_filter_min: 0.0
+  liquidity_filter_min: 0.0
+
+strategy:
+  entry_mode: breakout_close
+  one_open_trade_per_symbol: true
+  ambiguous_candle_policy: pessimistic
+  scenarios:
+    - name: SL 2% / TP 5%
+      stop_pct: 2.0
+      take_pct: 5.0
+    - name: SL 2% / TP 10%
+      stop_pct: 2.0
+      take_pct: 10.0
+    - name: SL 5% / TP 5%
+      stop_pct: 5.0
+      take_pct: 5.0
+    - name: SL 5% / TP 10%
+      stop_pct: 5.0
+      take_pct: 10.0
+
+dashboard:
+  title: Double Top Short Backtest
+  page_icon: DT
+  default_scenario: SL 2% / TP 5%
+  default_symbol_limit_for_heatmap: 30
+  trade_chart_padding_bars: 24
+  starting_capital_usd: 100000
+  stake_per_trade_usd: 200
+
+export:
+  write_patterns_csv: true
+  write_trades_csv: true
+  write_summary_markdown: true
+  export_encoding: utf-8-sig

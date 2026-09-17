@@ -1,0 +1,66 @@
+# Secrets and private local configuration
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+credentials*
+config.local*
+
+# Python environments, caches, and tooling
+.venv/
+venv/
+**/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Runtime state, databases, sessions, and logs
+runtime/
+data/
+datasets/
+logs/
+*.log
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.session
+*.session-*
+*-wal
+*-shm
+
+# Generated output and local research artifacts
+temp_charts/
+**/output/
+**/reports/
+**/cache/
+*.csv
+*.jsonl
+*.parquet
+*.pkl
+*.pickle
+build/
+dist/
+
+# Local temporary files and IDE metadata
+.tmp/
+.tmp-*/
+.tmp_*/
+.tmp-tests/
+.tmp_test_*/
+.idea/
+.vscode/
+*.tmp
+
+# Internal development material retained locally only
+.codex/
+CURRENT_TELEGRAM_UX_AFTER_COMMERCIAL_PASS.md
+PREMIUM_BOT_NAVIGATION_MAP.md
+RSI_PRODUCT_DISCOVERY_FOR_AUDITOR.md
+UX_ROUTE_REGISTRY.md
+docs/
