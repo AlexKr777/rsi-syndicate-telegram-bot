@@ -1,4 +1,4 @@
-aiohttp==3.12.15
+aiohttp==3.14.3
 aiosqlite==0.21.0
 matplotlib==3.10.1
 mplfinance==0.12.10b0
