@@ -89,11 +89,15 @@ Windows users can instead run `run.bat`. Supporting developer and maintenance en
 
 ## Tests
 
-The verified test invocation is:
+The deterministic offline suite uses forced, clearly named dummy Telegram settings and does not read real credentials from your environment:
 
 ```powershell
-.\.venv\Scripts\python -m unittest discover -s tests -v
+.\.venv\Scripts\python tests\offline_runner.py
 ```
+
+The runner configures the seven required Telegram/destination fields for the test process and clears optional credential/private-identifier fields so local values cannot leak into test behavior. Production startup remains strict: `src.core.config.Settings` still requires real authorized values from the local environment or ignored `.env` file. Existing tests replace Telegram, Binance, and other outbound operations with local fakes at their client/service boundaries; the offline suite does not claim to verify live Telegram delivery.
+
+Live-service checks, if added or run separately, require authorized test-only credentials and destinations. Do not use production tokens or channel identifiers for test automation.
 
 Compile the primary application with:
 
